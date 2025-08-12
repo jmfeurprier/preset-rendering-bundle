@@ -1,0 +1,79 @@
+jmf_preset_rendering:
+
+    #twig_functions_prefix: 'jmf_'
+
+    # Extra properties for specific contexts: display in grids, lists, etc.
+    properties:
+
+        align:
+            choices:
+                - 'center'
+                - 'left'
+                - 'right'
+            default:  'left'
+            required: false
+
+        label:
+            required: false
+
+    presets:
+
+        boolean:
+            align:    'center'
+            template: 'preset/boolean.html.twig'
+
+        created_at:
+            label:  'Created at'
+            source: 'createdAt'
+            parent: 'date_time'
+
+        date_time:
+            label:    'Date & Time'
+            template: 'preset/date_time.html.twig'
+
+        integer:
+            align:    'end'
+            template: 'preset/integer.html.twig'
+
+        modified_at:
+            label:  'Modified at'
+            source: 'modifiedAt'
+            parent: 'date_time'
+
+        monospace:
+            template: 'preset/monospace.html.twig'
+
+        name:
+            label:  'Name'
+            source: 'name'
+
+        price:
+            align:    'end'
+            label:    'Price'
+            source:   'price'
+            template: 'preset/price.html.twig'
+
+        rank:
+            align:  'end'
+            label:  'Rank'
+            source: 'rank'
+
+        status:
+            align:    'center'
+            label:    'Status'
+            template: 'preset/status.html.twig'
+
+        string:
+            align:    'start'
+            template: 'preset/string.html.twig'
+
+        text:
+            label:    'Content'
+            source:   'content'
+            template: |-
+                      {{ _value|nl2br }}
+
+        url:
+            label:    'URL'
+            source:   'url'
+            template: 'preset/url.html.twig'

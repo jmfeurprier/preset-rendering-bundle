@@ -1,0 +1,20 @@
+services:
+
+    _defaults:
+        autoconfigure: true
+        autowire:      true
+
+    Jmf\PresetRendering\:
+        resource: '../src/'
+
+    Jmf\PresetRendering\Preset\PresetRepository:
+        arguments:
+            $presetsConfig: '%jmf_preset_rendering.preset_configurations%'
+
+    Jmf\PresetRendering\Property\PropertyRepository:
+        arguments:
+            $propertiesConfig: '%jmf_preset_rendering.property_configurations%'
+
+    Jmf\PresetRendering\Twig\PresetRenderingExtension:
+        arguments:
+            $prefix: '%jmf_preset_rendering.twig_functions_prefix%'
