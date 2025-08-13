@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Tests\Property;
+namespace Jmf\RenderingPreset\Tests\Configuration\Property;
 
-use Jmf\PresetRendering\Exception\ReservedPropertyKeyException;
-use Jmf\PresetRendering\Property\PropertyLoader;
+use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class PropertyConfigurationLoaderTest extends TestCase
 {
-    private PropertyLoader $propertyConfigurationLoader;
+    private \Jmf\RenderingPreset\Configuration\Property\PropertyLoader $propertyConfigurationLoader;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->propertyConfigurationLoader = new PropertyLoader();
+        $this->propertyConfigurationLoader = new \Jmf\RenderingPreset\Configuration\Property\PropertyLoader();
     }
 
     /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Rendering;
+namespace Jmf\RenderingPreset\Preset\Rendering;
 
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 
 readonly class RenderedPreset
 {

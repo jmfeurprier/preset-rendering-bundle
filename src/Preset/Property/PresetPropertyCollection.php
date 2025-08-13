@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Property;
+namespace Jmf\RenderingPreset\Preset\Property;
 
-use Jmf\PresetRendering\Exception\NonUniquePropertyKeyException;
-use Jmf\PresetRendering\Exception\PresetPropertyNotFoundException;
+use Jmf\RenderingPreset\Exception\PresetPropertyNotFoundException;
 use Webmozart\Assert\Assert;
 
 readonly class PresetPropertyCollection
@@ -17,8 +16,6 @@ readonly class PresetPropertyCollection
 
     /**
      * @param PresetProperty[] $properties
-     *
-     * @throws NonUniquePropertyKeyException
      */
     public function __construct(
         iterable $properties,
@@ -29,10 +26,6 @@ readonly class PresetPropertyCollection
 
         foreach ($properties as $property) {
             $key = $property->getKey();
-
-            if (array_key_exists($key, $indexed)) {
-                throw new NonUniquePropertyKeyException($key);
-            }
 
             $indexed[$key] = $property;
         }
@@ -83,20 +76,5 @@ readonly class PresetPropertyCollection
     public function all(): iterable
     {
         return array_values($this->properties);
-    }
-
-    /**
-     * @throws NonUniquePropertyKeyException
-     */
-    public function merge(self $other): self
-    {
-        return new self(
-            array_values(
-                array_merge(
-                    $other->properties,
-                    $this->properties,
-                ),
-            ),
-        );
     }
 }

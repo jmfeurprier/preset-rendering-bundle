@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Exception;
+namespace Jmf\RenderingPreset\Exception;
 
-class PresetPropertyNotFoundException extends PresetRenderingException
+class PresetPropertyNotFoundException extends RenderingPresetException
 {
     public function __construct(
         private readonly string $propertyKey,

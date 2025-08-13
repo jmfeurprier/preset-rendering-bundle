@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\PresetRendering\Exception\PresetNotFoundException;
-use Jmf\PresetRendering\Exception\PresetRenderingException;
+use Jmf\RenderingPreset\Exception\PresetNotFoundException;
 use Webmozart\Assert\Assert;
 
 readonly class PresetCollection
@@ -17,8 +16,6 @@ readonly class PresetCollection
 
     /**
      * @param Preset[] $presets
-     *
-     * @throws PresetRenderingException
      */
     public function __construct(
         iterable $presets,
@@ -29,11 +26,6 @@ readonly class PresetCollection
 
         foreach ($presets as $preset) {
             $id = $preset->getId();
-
-            if (array_key_exists($id, $indexed)) {
-                // @todo
-                throw new PresetRenderingException("Non-unique Preset Id '{$id}' found .");
-            }
 
             $indexed[$id] = $preset;
         }

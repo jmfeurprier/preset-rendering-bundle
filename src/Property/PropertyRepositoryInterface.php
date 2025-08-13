@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Property;
+namespace Jmf\RenderingPreset\Property;
 
-use Jmf\PresetRendering\Exception\ReservedPropertyKeyException;
+use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 
 interface PropertyRepositoryInterface
 {

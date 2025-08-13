@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Tests\Preset\Property;
+namespace Jmf\RenderingPreset\Tests\Configuration\Preset\Property;
 
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Preset\Property\PresetPropertyLoader;
-use Jmf\PresetRendering\Property\Property;
+use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyLoader;
+use Jmf\RenderingPreset\Exception\RenderingPresetException;
+use Jmf\RenderingPreset\Property\Property;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -18,14 +18,16 @@ final class PresetPropertyLoaderTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->presetPropertyLoader = new PresetPropertyLoader();
+        $this->presetPropertyLoader = new \Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyLoader();
     }
 
     /**
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     public function testLoadWithNullDefaultValue(): void
     {
+        $presetId = 'abc';
+
         $property = new Property(
             key:      'foo',
             required: false,
@@ -33,17 +35,19 @@ final class PresetPropertyLoaderTest extends TestCase
 
         $config = [];
 
-        $presetProperty = $this->presetPropertyLoader->load($config, $property);
+        $presetProperty = $this->presetPropertyLoader->load($presetId, $config, $property);
 
         self::assertSame('foo', $presetProperty->getKey());
         self::assertNull($presetProperty->getValue());
     }
 
     /**
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     public function testLoadWithSpecificDefaultValue(): void
     {
+        $presetId = 'abc';
+
         $property = new Property(
             key:      'foo',
             required: false,
@@ -52,7 +56,7 @@ final class PresetPropertyLoaderTest extends TestCase
 
         $config = [];
 
-        $presetProperty = $this->presetPropertyLoader->load($config, $property);
+        $presetProperty = $this->presetPropertyLoader->load($presetId, $config, $property);
 
         self::assertSame('foo', $presetProperty->getKey());
         self::assertSame('bar', $presetProperty->getValue());
@@ -87,7 +91,7 @@ final class PresetPropertyLoaderTest extends TestCase
      * @param non-empty-string $key
      * @param mixed[]          $choices
      *
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     #[DataProvider('dataProviderValidCases')]
     public function testLoadWithDefinedConfigValue(
@@ -97,6 +101,8 @@ final class PresetPropertyLoaderTest extends TestCase
         mixed $default = null,
         iterable $choices = [],
     ): void {
+        $presetId = 'abc';
+
         $property = new Property(
             key:      $key,
             required: $required,
@@ -108,7 +114,7 @@ final class PresetPropertyLoaderTest extends TestCase
             $key => $value,
         ];
 
-        $presetProperty = $this->presetPropertyLoader->load($config, $property);
+        $presetProperty = $this->presetPropertyLoader->load($presetId, $config, $property);
 
         self::assertSame($key, $presetProperty->getKey());
         self::assertSame($value, $presetProperty->getValue());

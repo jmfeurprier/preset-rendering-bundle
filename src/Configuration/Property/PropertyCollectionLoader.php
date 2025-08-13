@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Property;
+namespace Jmf\RenderingPreset\Configuration\Property;
 
-use Jmf\PresetRendering\Exception\ReservedPropertyKeyException;
+use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
+use Jmf\RenderingPreset\Property\PropertyCollection;
 use Webmozart\Assert\Assert;
 
 readonly class PropertyCollectionLoader
@@ -18,7 +19,7 @@ readonly class PropertyCollectionLoader
      * @param array<string, mixed> $propertiesConfig
      *
      * @throws ReservedPropertyKeyException
-*/
+     */
     public function load(array $propertiesConfig): PropertyCollection
     {
         Assert::isMap($propertiesConfig);

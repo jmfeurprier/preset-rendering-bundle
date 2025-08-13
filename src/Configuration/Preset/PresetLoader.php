@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Configuration\Preset;
 
-use Jmf\PresetRendering\Exception\NonUniquePropertyKeyException;
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollection;
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollectionLoader;
-use Jmf\PresetRendering\Preset\Template\PresetTemplateLoader;
-use Jmf\PresetRendering\Property\PropertyCollection;
+use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionLoader;
+use Jmf\RenderingPreset\Configuration\Preset\Template\PresetTemplateLoader;
+use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
+use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
+use Jmf\RenderingPreset\Preset\Preset;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Property\PropertyCollection;
 use Jmf\TemplateRendering\TemplateInterface;
 use Webmozart\Assert\Assert;
 
@@ -26,8 +27,8 @@ readonly class PresetLoader
      * @param array<string, mixed> $presetsConfig
      * @param non-empty-string     $presetId
      *
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     public function load(
         array $presetsConfig,
@@ -44,8 +45,8 @@ readonly class PresetLoader
      * @param array<string, mixed> $presetsConfig
      * @param non-empty-string     $presetId
      *
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     private function doLoad(
         array $presetsConfig,
@@ -62,7 +63,7 @@ readonly class PresetLoader
             id:         $presetId,
             source:     $this->getSource($presetConfig),
             template:   $this->getTemplate($presetConfig),
-            properties: $this->getPresetPropertyCollection($presetConfig, $propertyCollection),
+            properties: $this->getPresetPropertyCollection($presetId, $presetConfig, $propertyCollection),
         );
 
         $parent = $this->getParent($presetsConfig, $presetConfig, $propertyCollection);
@@ -90,25 +91,26 @@ readonly class PresetLoader
 
     /**
      * @param array<string, mixed> $presetConfig
-     *
-     * @throws PresetRenderingException
      */
-    private function getTemplate(array $presetConfig): ?TemplateInterface
-    {
+    private function getTemplate(
+        array $presetConfig,
+    ): ?TemplateInterface {
         return $this->presetTemplateLoader->load($presetConfig);
     }
 
     /**
      * @param array<string, mixed> $presetConfig
      *
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     private function getPresetPropertyCollection(
+        string $presetId,
         array $presetConfig,
         PropertyCollection $propertyCollection,
     ): PresetPropertyCollection {
         return $this->presetPropertyCollectionLoader->load(
+            $presetId,
             $presetConfig,
             $propertyCollection,
         );
@@ -118,8 +120,8 @@ readonly class PresetLoader
      * @param array<string, mixed> $presetsConfig
      * @param array<string, mixed> $presetConfig
      *
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     private function getParent(
         array $presetsConfig,

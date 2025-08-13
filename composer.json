@@ -1,6 +1,6 @@
 {
-    "name": "jmf/preset-rendering-bundle",
-    "description": "Preset rendering bundle for Symfony",
+    "name": "jmf/rendering-preset-bundle",
+    "description": "Rendering preset bundle for Symfony",
     "license": "mit",
     "type": "symfony-bundle",
     "require": {
@@ -29,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Jmf\\PresetRendering\\": "src"
+            "Jmf\\RenderingPreset\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jmf\\PresetRendering\\Tests\\": "tests/src"
+            "Jmf\\RenderingPreset\\Tests\\": "tests/src"
         }
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
 use Override;
 use Psr\Cache\InvalidArgumentException;
@@ -10,10 +10,14 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Webmozart\Assert\Assert;
 
-readonly class CacheablePresetCollectionLoader implements PresetCollectionLoaderInterface
+readonly class CacheablePresetRepository implements PresetRepositoryInterface
 {
+    /**
+     * @param array<string, array<string, mixed>> $presetsConfig
+     */
     public function __construct(
-        private PresetCollectionLoaderInterface $wrapped,
+        private PresetRepositoryInterface $wrapped,
+        private array $presetsConfig,
         private CacheInterface $cache,
     ) {
     }
@@ -22,14 +26,13 @@ readonly class CacheablePresetCollectionLoader implements PresetCollectionLoader
      * @throws InvalidArgumentException
      */
     #[Override]
-    public function load(
-        array $presetsConfig,
-    ): PresetCollection {
+    public function getCollection(): PresetCollection
+    {
         $presetCollection = $this->cache->get(
-            $this->getCacheKey($presetsConfig),
+            $this->getCacheKey(),
             fn(
                 ItemInterface $item,
-            ): PresetCollection => $this->wrapped->load($presetsConfig),
+            ): PresetCollection => $this->wrapped->getCollection(),
         );
 
         Assert::isInstanceOf($presetCollection, PresetCollection::class);
@@ -38,18 +41,15 @@ readonly class CacheablePresetCollectionLoader implements PresetCollectionLoader
     }
 
     /**
-     * @param array<string, mixed> $presetsConfig
-     *
      * @return non-empty-string
      */
-    private function getCacheKey(
-        array $presetsConfig,
-    ): string {
+    private function getCacheKey(): string
+    {
         return md5(
             serialize(
                 [
                     self::class,
-                    $presetsConfig,
+                    $this->presetsConfig,
                 ],
             ),
         );

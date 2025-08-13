@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Exception;
+namespace Jmf\RenderingPreset\Exception;
 
-class ReservedPropertyKeyException extends PresetRenderingException
+class ReservedPropertyKeyException extends InvalidConfigurationException
 {
     public function __construct(
         private readonly string $key,

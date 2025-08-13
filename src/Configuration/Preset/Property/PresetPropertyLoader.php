@@ -2,34 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Property;
+namespace Jmf\RenderingPreset\Configuration\Preset\Property;
 
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Property\Property;
+use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
+use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
+use Jmf\RenderingPreset\Preset\Property\PresetProperty;
+use Jmf\RenderingPreset\Property\Property;
 
 readonly class PresetPropertyLoader
 {
     /**
      * @param array<string, mixed> $presetConfig
      *
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     public function load(
+        string $presetId,
         array $presetConfig,
         Property $property,
     ): PresetProperty {
         return new PresetProperty(
             $property->getKey(),
-            $this->getValue($presetConfig, $property),
+            $this->getValue($presetId, $presetConfig, $property),
         );
     }
 
     /**
      * @param array<string, mixed> $presetConfig
      *
-     * @throws PresetRenderingException
+     * @throws MissingRequiredPropertyValueException
+     * @throws PropertyValueDomainException
      */
     private function getValue(
+        string $presetId,
         array $presetConfig,
         Property $property,
     ): mixed {
@@ -38,23 +44,23 @@ readonly class PresetPropertyLoader
         if (array_key_exists($key, $presetConfig)) {
             $value = $presetConfig[$key];
 
-            $this->validateValue($property, $value);
+            $this->validateValue($presetId, $property, $value);
 
             return $value;
         }
 
         if ($property->isRequired()) {
-            // @todo
-            throw new PresetRenderingException('Preset property value is required.');
+            throw new MissingRequiredPropertyValueException($property, $presetId);
         }
 
         return $property->getDefault();
     }
 
     /**
-     * @throws PresetRenderingException
+     * @throws PropertyValueDomainException
      */
     private function validateValue(
+        string $presetId,
         Property $property,
         mixed $value,
     ): void {
@@ -65,8 +71,7 @@ readonly class PresetPropertyLoader
         }
 
         if (!in_array($value, (array) $choices, true)) {
-            // @todo
-            throw new PresetRenderingException('Preset property value is not part of available choices.');
+            throw new PropertyValueDomainException($property, $presetId);
         }
     }
 }

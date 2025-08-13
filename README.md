@@ -1,4 +1,4 @@
-# Preset rendering bundle
+# Rendering Preset Bundle
 
 Symfony bundle which allows rendering preset templates.
 
@@ -7,7 +7,7 @@ Symfony bundle which allows rendering preset templates.
 Install with [Composer](https://getcomposer.org):
 
 ```shell script
-composer require jmf/preset-rendering-bundle
+composer require jmf/rendering-preset-bundle
 ```
 
 If you have [Flex](https://symfony.com/packages/Symfony%20Flex) installed, the bundle is then instantly available without any need for initial configuration.
@@ -20,6 +20,6 @@ return [
     // ...
     // Other existing bundles.
     // ...
-    Jmf\PresetRendering\PresetRenderingBundle::class => ['all' => true],
+    Jmf\RenderingPreset\RenderingPresetBundle::class => ['all' => true],
 ];
 ```

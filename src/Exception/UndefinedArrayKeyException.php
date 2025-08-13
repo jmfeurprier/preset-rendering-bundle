@@ -2,32 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Exception;
+namespace Jmf\RenderingPreset\Exception;
 
-use Jmf\PresetRendering\Preset\Preset;
+use Jmf\RenderingPreset\Preset\Preset;
+use function sprintf;
 
-class UndefinedArrayKeyException extends PresetRenderingException
+class UndefinedArrayKeyException extends UnreadableItemValueException
 {
     /**
      * @param array<string, mixed> $array
      */
     public function __construct(
-        private readonly Preset $preset,
+        Preset $preset,
         private readonly array $array,
         private readonly string $key,
     ) {
         parent::__construct(
-            message: $this->buildMessage(),
-        );
-    }
-
-    private function buildMessage(): string
-    {
-        return sprintf(
-            "Cannot read key %s from array (defined keys: %s) in preset '%s'.",
-            $this->key,
-            $this->buildKeysString(),
-            $this->preset->getId(),
+            preset:  $preset,
+            message: sprintf(
+                         "Cannot read key %s from array (defined keys: %s) in preset '%s'.",
+                         $this->key,
+                         $this->buildKeysString(),
+                         $this->getPreset()->getId(),
+                     ),
         );
     }
 
@@ -53,11 +50,6 @@ class UndefinedArrayKeyException extends PresetRenderingException
         }
 
         return $keysString;
-    }
-
-    public function getPreset(): Preset
-    {
-        return $this->preset;
     }
 
     /**

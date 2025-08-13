@@ -2,22 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Tests\Preset;
+namespace Jmf\RenderingPreset\Tests\Preset;
 
-use Jmf\PresetRendering\Exception\NonUniquePropertyKeyException;
-use Jmf\PresetRendering\Exception\PresetNotFoundException;
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Preset\Preset;
-use Jmf\PresetRendering\Preset\PresetCollection;
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Exception\PresetNotFoundException;
+use Jmf\RenderingPreset\Exception\RenderingPresetException;
+use Jmf\RenderingPreset\Preset\Preset;
+use Jmf\RenderingPreset\Preset\PresetCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 use PHPUnit\Framework\TestCase;
 
 final class PresetCollectionTest extends TestCase
 {
     /**
-     * @throws NonUniquePropertyKeyException
      * @throws PresetNotFoundException
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     public function testPresetIsRetrievable(): void
     {
@@ -36,28 +34,7 @@ final class PresetCollectionTest extends TestCase
     }
 
     /**
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetRenderingException
-     */
-    public function testNonUniquePresetIdIsDetected(): void
-    {
-        $presetPrimary   = $this->createPreset('foo');
-        $presetSecondary = $this->createPreset('foo');
-
-        $this->expectException(PresetRenderingException::class);
-
-        new PresetCollection(
-            [
-                $presetPrimary,
-                $presetSecondary,
-            ],
-        );
-    }
-
-    /**
      * @param non-empty-string $id
-     *
-     * @throws NonUniquePropertyKeyException
      */
     private function createPreset(string $id): Preset
     {

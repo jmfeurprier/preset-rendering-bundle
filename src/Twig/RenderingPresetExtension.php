@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Twig;
+namespace Jmf\RenderingPreset\Twig;
 
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Preset\PresetRepository;
-use Jmf\PresetRendering\Preset\Rendering\PresetRendererInterface;
-use Jmf\PresetRendering\Preset\Rendering\RenderedPreset;
+use Jmf\RenderingPreset\Exception\RenderingPresetException;
+use Jmf\RenderingPreset\Preset\PresetRepositoryInterface;
+use Jmf\RenderingPreset\Preset\Rendering\PresetRendererInterface;
+use Jmf\RenderingPreset\Preset\Rendering\RenderedPreset;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class PresetRenderingExtension extends AbstractExtension
+class RenderingPresetExtension extends AbstractExtension
 {
     public final const string PREFIX_DEFAULT = '';
 
     public function __construct(
-        private readonly PresetRepository $presetRepository,
+        private readonly PresetRepositoryInterface $presetRepository,
         private readonly PresetRendererInterface $presetRenderer,
         private readonly string $prefix = self::PREFIX_DEFAULT,
     ) {
@@ -52,14 +52,14 @@ class PresetRenderingExtension extends AbstractExtension
      * @param array<string, mixed>|object $item
      * @param null|non-empty-string       $source
      *
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     public function render(
         string $presetId,
         array | object $item,
         ?string $source = null,
     ): string {
-        return $this->get($presetId, $item, $source)->getContent();
+        return $this->doGet($presetId, $item, $source)->getContent();
     }
 
     /**
@@ -67,14 +67,29 @@ class PresetRenderingExtension extends AbstractExtension
      * @param array<string, mixed>|object $item
      * @param null|non-empty-string       $source
      *
-     * @throws PresetRenderingException
+     * @throws RenderingPresetException
      */
     public function get(
         string $presetId,
         array | object $item,
         ?string $source = null,
     ): RenderedPreset {
-        $preset = $this->presetRepository->get($presetId);
+        return $this->doGet($presetId, $item, $source);
+    }
+
+    /**
+     * @param non-empty-string            $presetId
+     * @param array<string, mixed>|object $item
+     * @param null|non-empty-string       $source
+     *
+     * @throws RenderingPresetException
+     */
+    private function doGet(
+        string $presetId,
+        array | object $item,
+        ?string $source = null,
+    ): RenderedPreset {
+        $preset = $this->presetRepository->getCollection()->get($presetId);
 
         return $this->presetRenderer->render($preset, $item, $source);
     }

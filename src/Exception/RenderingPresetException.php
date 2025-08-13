@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Exception;
 
-use Jmf\RenderingPreset\Preset\Preset;
+use Exception;
 use Throwable;
 
-class TemplateRenderingException extends RenderingPresetException
+abstract class RenderingPresetException extends Exception
 {
     public function __construct(
-        Preset $preset,
+        string $message,
         ?Throwable $previous = null,
     ) {
         parent::__construct(
-            message:  "Failed rendering Preset '{$preset->getId()}' Template.",
+            message:  $message,
             previous: $previous,
         );
     }

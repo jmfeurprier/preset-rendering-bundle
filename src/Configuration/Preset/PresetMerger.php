@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Configuration\Preset;
 
-use Jmf\PresetRendering\Exception\NonUniquePropertyKeyException;
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionMerger;
+use Jmf\RenderingPreset\Preset\Preset;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 
 readonly class PresetMerger
 {
-    /**
-     * @throws NonUniquePropertyKeyException
-     */
+    public function __construct(
+        private PresetPropertyCollectionMerger $presetPropertyCollectionMerger,
+    ) {
+    }
+
     public function merge(
         Preset $preset,
         Preset $parent,
@@ -24,15 +27,13 @@ readonly class PresetMerger
         );
     }
 
-    /**
-     * @throws NonUniquePropertyKeyException
-     */
     private function mergeProperties(
         Preset $preset,
         Preset $parent,
     ): PresetPropertyCollection {
-        return $preset->getProperties()->merge(
+        return $this->presetPropertyCollectionMerger->merge(
             $parent->getProperties(),
+            $preset->getProperties(),
         );
     }
 }

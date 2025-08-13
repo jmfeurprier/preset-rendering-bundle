@@ -2,20 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\PresetRendering\Exception\NonUniquePropertyKeyException;
-use Jmf\PresetRendering\Exception\PresetNotFoundException;
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Exception\ReservedPropertyKeyException;
+use Jmf\RenderingPreset\Exception\InvalidConfigurationException;
 
 interface PresetRepositoryInterface
 {
     /**
-     * @throws NonUniquePropertyKeyException
-     * @throws PresetNotFoundException
-     * @throws PresetRenderingException
-     * @throws ReservedPropertyKeyException
+     * @throws InvalidConfigurationException
      */
-    public function get(string $id): Preset;
+    public function getCollection(): PresetCollection;
 }

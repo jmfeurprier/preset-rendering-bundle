@@ -7,15 +7,21 @@ namespace Jmf\RenderingPreset\Exception;
 use Jmf\RenderingPreset\Preset\Preset;
 use Throwable;
 
-class TemplateRenderingException extends RenderingPresetException
+abstract class UnreadableItemValueException extends RenderingPresetException
 {
     public function __construct(
-        Preset $preset,
+        private readonly Preset $preset,
+        string $message,
         ?Throwable $previous = null,
     ) {
         parent::__construct(
-            message:  "Failed rendering Preset '{$preset->getId()}' Template.",
+            message:  $message,
             previous: $previous,
         );
+    }
+
+    public function getPreset(): Preset
+    {
+        return $this->preset;
     }
 }

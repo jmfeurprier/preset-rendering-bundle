@@ -4,17 +4,33 @@ services:
         autoconfigure: true
         autowire:      true
 
-    Jmf\PresetRendering\:
+    Jmf\RenderingPreset\:
         resource: '../src/'
 
-    Jmf\PresetRendering\Preset\PresetRepository:
+    Jmf\RenderingPreset\Preset\CacheablePresetRepository:
         arguments:
-            $presetsConfig: '%jmf_preset_rendering.preset_configurations%'
+            $wrapped:       '@Jmf\RenderingPreset\Preset\PresetRepository'
+            $presetsConfig: '%jmf_rendering_preset.preset_configurations%'
 
-    Jmf\PresetRendering\Property\PropertyRepository:
+    Jmf\RenderingPreset\Preset\PresetRepository:
         arguments:
-            $propertiesConfig: '%jmf_preset_rendering.property_configurations%'
+            $presetsConfig: '%jmf_rendering_preset.preset_configurations%'
 
-    Jmf\PresetRendering\Twig\PresetRenderingExtension:
+    Jmf\RenderingPreset\Preset\PresetRepositoryInterface:
+        alias: Jmf\RenderingPreset\Preset\CacheablePresetRepository
+
+    Jmf\RenderingPreset\Property\CacheablePropertyRepository:
         arguments:
-            $prefix: '%jmf_preset_rendering.twig_functions_prefix%'
+            $wrapped:          '@Jmf\RenderingPreset\Property\PropertyRepository'
+            $propertiesConfig: '%jmf_rendering_preset.property_configurations%'
+
+    Jmf\RenderingPreset\Property\PropertyRepository:
+        arguments:
+            $propertiesConfig: '%jmf_rendering_preset.property_configurations%'
+
+    Jmf\RenderingPreset\Property\PropertyRepositoryInterface:
+        alias: Jmf\RenderingPreset\Property\CacheablePropertyRepository
+
+    Jmf\RenderingPreset\Twig\RenderingPresetExtension:
+        arguments:
+            $prefix: '%jmf_rendering_preset.twig_functions_prefix%'

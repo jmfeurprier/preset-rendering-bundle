@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Rendering;
+namespace Jmf\RenderingPreset\Preset\Rendering;
 
-use Jmf\PresetRendering\Exception\PresetRenderingException;
+use Jmf\RenderingPreset\Exception\HtmlEscapingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Throwable;
 
@@ -16,7 +16,7 @@ readonly class HtmlEscaper
     }
 
     /**
-     * @throws PresetRenderingException
+     * @throws HtmlEscapingException
      */
     public function escape(
         string $value,
@@ -29,8 +29,8 @@ readonly class HtmlEscaper
                 ],
             );
         } catch (Throwable $e) {
-            // @todo
-            throw new PresetRenderingException(
+            throw new HtmlEscapingException(
+                value:    $value,
                 previous: $e,
             );
         }

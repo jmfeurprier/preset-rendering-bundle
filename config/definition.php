@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Jmf\PresetRendering\Twig\PresetRenderingExtension;
+use Jmf\RenderingPreset\Twig\RenderingPresetExtension;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
 return static function (DefinitionConfigurator $definition): void {
@@ -13,12 +13,11 @@ return static function (DefinitionConfigurator $definition): void {
             ->arrayNode('presets')
                 ->defaultValue([])
                 ->arrayPrototype()
-                    ->ignoreExtraKeys()
+                    ->ignoreExtraKeys(false)
                     ->children()
-                        ->stringNode('label')->defaultNull()->end()
                         ->stringNode('parent')->defaultNull()->cannotBeEmpty()->end()
                         ->stringNode('source')->defaultNull()->cannotBeEmpty()->end()
-                        ->variableNode('template')->defaultNull()->end()
+                        ->stringNode('template')->defaultNull()->cannotBeEmpty()->end()
                     ->end()
                 ->end()
             ->end()
@@ -37,7 +36,7 @@ return static function (DefinitionConfigurator $definition): void {
             ->end()
             ->stringNode('twig_functions_prefix')
                 ->info('Twig functions prefix.')
-                ->defaultValue(PresetRenderingExtension::PREFIX_DEFAULT)
+                ->defaultValue(RenderingPresetExtension::PREFIX_DEFAULT)
             ->end()
         ->end()
     ;

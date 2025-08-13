@@ -1,4 +1,4 @@
-jmf_preset_rendering:
+jmf_rendering_preset:
 
     #twig_functions_prefix: 'jmf_'
 
@@ -70,8 +70,7 @@ jmf_preset_rendering:
         text:
             label:    'Content'
             source:   'content'
-            template: |-
-                      {{ _value|nl2br }}
+            template: 'preset/text.html.twig'
 
         url:
             label:    'URL'

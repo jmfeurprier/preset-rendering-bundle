@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Exception;
 
-use Jmf\RenderingPreset\Preset\Preset;
 use Throwable;
 
-class TemplateRenderingException extends RenderingPresetException
+class HtmlEscapingException extends RenderingPresetException
 {
     public function __construct(
-        Preset $preset,
+        private readonly string $value,
         ?Throwable $previous = null,
     ) {
         parent::__construct(
-            message:  "Failed rendering Preset '{$preset->getId()}' Template.",
+            message:  'Failed HTML-escaping provided value.',
             previous: $previous,
         );
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
     }
 }

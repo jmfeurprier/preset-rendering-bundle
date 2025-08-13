@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Rendering;
+namespace Jmf\RenderingPreset\Preset\Rendering;
 
-use Jmf\PresetRendering\Exception\UndefinedArrayKeyException;
-use Jmf\PresetRendering\Exception\UnreadableObjectPropertyException;
-use Jmf\PresetRendering\Preset\Preset;
+use Jmf\RenderingPreset\Exception\UndefinedArrayKeyException;
+use Jmf\RenderingPreset\Exception\UnreadableItemValueException;
+use Jmf\RenderingPreset\Exception\UnreadableObjectPropertyException;
+use Jmf\RenderingPreset\Preset\Preset;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Throwable;
 
@@ -20,27 +21,24 @@ readonly class ItemValueReader
     /**
      * @param array<string, mixed>|object $item
      *
-     * @throws UnreadableObjectPropertyException
-     * @throws UndefinedArrayKeyException
+     * @throws UnreadableItemValueException
      */
     public function read(
         Preset $preset,
         array | object $item,
         ?string $source = null,
     ): mixed {
+        $source ??= $preset->getSource();
+
         if (null === $source) {
-            $source = $preset->getSource();
-
-            if (null === $source) {
-                return null;
-            }
+            return null;
         }
 
-        if (is_array($item)) {
-            return $this->readFromArray($preset, $item, $source);
+        if (is_object($item)) {
+            return $this->readFromObject($preset, $item, $source);
         }
 
-        return $this->readFromObject($preset, $item, $source);
+        return $this->readFromArray($preset, $item, $source);
     }
 
     /**

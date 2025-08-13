@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset\Rendering;
+namespace Jmf\RenderingPreset\Preset\Rendering;
 
-use Jmf\PresetRendering\Exception\PresetRenderingException;
-use Jmf\PresetRendering\Exception\TemplateRenderingException;
-use Jmf\PresetRendering\Exception\UndefinedArrayKeyException;
-use Jmf\PresetRendering\Exception\UnreadableObjectPropertyException;
-use Jmf\PresetRendering\Preset\Preset;
+use Jmf\RenderingPreset\Exception\HtmlEscapingException;
+use Jmf\RenderingPreset\Exception\TemplateRenderingException;
+use Jmf\RenderingPreset\Exception\UnexpectedContentValueTypeException;
+use Jmf\RenderingPreset\Exception\UnreadableItemValueException;
+use Jmf\RenderingPreset\Preset\Preset;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Override;
 use Stringable;
@@ -18,7 +18,7 @@ readonly class PresetRenderer implements PresetRendererInterface
 {
     public function __construct(
         private TemplateRendererInterface $templateRenderer,
-        private ItemValueReader $itemPropertyReader,
+        private ItemValueReader $itemValueReader,
         private HtmlEscaper $htmlEscaper,
     ) {
     }
@@ -38,10 +38,10 @@ readonly class PresetRenderer implements PresetRendererInterface
     /**
      * @param array<string, mixed>|object $item
      *
-     * @throws PresetRenderingException
+     * @throws HtmlEscapingException
      * @throws TemplateRenderingException
-     * @throws UndefinedArrayKeyException
-     * @throws UnreadableObjectPropertyException
+     * @throws UnexpectedContentValueTypeException
+     * @throws UnreadableItemValueException
      */
     private function getContent(
         Preset $preset,
@@ -66,22 +66,20 @@ readonly class PresetRenderer implements PresetRendererInterface
             return '';
         }
 
-        // @todo
-        throw new PresetRenderingException('Unexpected content value type.');
+        throw new UnexpectedContentValueTypeException($preset, $item, $source, $value);
     }
 
     /**
      * @param array<string, mixed>|object $item
      *
-     * @throws UndefinedArrayKeyException
-     * @throws UnreadableObjectPropertyException
+     * @throws UnreadableItemValueException
      */
     private function tryGetValueFromSource(
         Preset $preset,
         array | object $item,
         ?string $source,
     ): mixed {
-        return $this->itemPropertyReader->read($preset, $item, $source);
+        return $this->itemValueReader->read($preset, $item, $source);
     }
 
     /**

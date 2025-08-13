@@ -2,30 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Exception;
+namespace Jmf\RenderingPreset\Exception;
 
-use Jmf\PresetRendering\Preset\Preset;
+use Jmf\RenderingPreset\Preset\Preset;
 use Throwable;
 
-class UnreadableObjectPropertyException extends PresetRenderingException
+class UnreadableObjectPropertyException extends UnreadableItemValueException
 {
     public function __construct(
-        private readonly Preset $preset,
+        Preset $preset,
         private readonly object $object,
         private readonly string $property,
         ?Throwable $previous = null,
     ) {
-        $class = $this->object::class;
-
         parent::__construct(
-            message:  "Cannot read property {$this->property} from {$class} object in preset '{$this->preset->getId()}'.",
+            preset:   $preset,
+            message:  sprintf(
+                          "Cannot read property %s from %s object in preset '%s'.",
+                          $this->property,
+                          $this->object::class,
+                          $this->getPreset()->getId(),
+                      ),
             previous: $previous,
         );
-    }
-
-    public function getPreset(): Preset
-    {
-        return $this->preset;
     }
 
     public function getObject(): object

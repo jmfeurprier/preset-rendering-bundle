@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Property;
+namespace Jmf\RenderingPreset\Property;
 
 use Webmozart\Assert\Assert;
 

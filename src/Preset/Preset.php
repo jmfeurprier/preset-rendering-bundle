@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\PresetRendering\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\PresetRendering\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 use Jmf\TemplateRendering\TemplateInterface;
 use Webmozart\Assert\Assert;
 
