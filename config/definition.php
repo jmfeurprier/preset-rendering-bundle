@@ -12,6 +12,7 @@ return static function (DefinitionConfigurator $definition): void {
         ->children()
             ->arrayNode('presets')
                 ->defaultValue([])
+                ->useAttributeAsKey('id')
                 ->arrayPrototype()
                     ->ignoreExtraKeys(false)
                     ->children()
