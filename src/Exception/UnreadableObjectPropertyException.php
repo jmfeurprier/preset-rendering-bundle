@@ -21,7 +21,7 @@ class UnreadableObjectPropertyException extends UnreadableItemValueException
                           "Cannot read property %s from %s object in preset '%s'.",
                           $this->property,
                           $this->object::class,
-                          $this->getPreset()->getId(),
+                          $preset->getId(),
                       ),
             previous: $previous,
         );

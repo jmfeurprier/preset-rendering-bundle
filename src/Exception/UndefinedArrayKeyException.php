@@ -23,7 +23,7 @@ class UndefinedArrayKeyException extends UnreadableItemValueException
                          "Cannot read key %s from array (defined keys: %s) in preset '%s'.",
                          $this->key,
                          $this->buildKeysString(),
-                         $this->getPreset()->getId(),
+                         $preset->getId(),
                      ),
         );
     }
