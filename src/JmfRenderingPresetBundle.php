@@ -33,22 +33,38 @@ class JmfRenderingPresetBundle extends AbstractBundle
         $definition->import('../config/definition.php');
     }
 
+    /**
+     * @param array{
+     *     presets: array<string, array{
+     *         parent: string|null,
+     *         source: string|null,
+     *         template: string|null,
+     *         ...
+     *     }>,
+     *     properties: array<string, array{
+     *         choices: list<scalar>,
+     *         default: mixed,
+     *         required: bool,
+     *     }>,
+     *     twig_functions_prefix: string,
+     * } $config
+     */
     #[Override]
     public function loadExtension(
         array $config,
-        ContainerConfigurator $container,
-        ContainerBuilder $builder,
+        ContainerConfigurator $configurator,
+        ContainerBuilder $container,
     ): void {
-        $container->import('../config/services.yaml');
+        $configurator->import('../config/services.yaml');
 
-        $this->loadParameters($config, $container);
+        $this->loadParameters($config, $configurator);
 
-        $container->services()
+        $configurator->services()
             ->get(CacheablePresetRepository::class)
             ->arg('$wrapped', new Reference(PresetRepository::class))
         ;
 
-        $container->services()
+        $configurator->services()
             ->alias(PresetRepositoryInterface::class, CacheablePresetRepository::class)
         ;
     }

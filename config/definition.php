@@ -23,6 +23,8 @@ return static function (DefinitionConfigurator $definition): void {
                 ->end()
             ->end()
             ->arrayNode('properties')
+                ->defaultValue([])
+                ->useAttributeAsKey('key')
                 ->arrayPrototype()
                     ->fixXmlConfig('choice')
                     ->children()

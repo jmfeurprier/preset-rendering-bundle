@@ -11,6 +11,7 @@ services:
         arguments:
             $wrapped:       '@Jmf\RenderingPreset\Preset\PresetRepository'
             $presetsConfig: '%jmf_rendering_preset.preset_configurations%'
+            $cache:         '@cache.app'
 
     Jmf\RenderingPreset\Preset\PresetRepository:
         arguments:
@@ -23,6 +24,7 @@ services:
         arguments:
             $wrapped:          '@Jmf\RenderingPreset\Property\PropertyRepository'
             $propertiesConfig: '%jmf_rendering_preset.property_configurations%'
+            $cache:            '@cache.app'
 
     Jmf\RenderingPreset\Property\PropertyRepository:
         arguments:
