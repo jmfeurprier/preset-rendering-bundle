@@ -6,6 +6,7 @@ namespace Jmf\RenderingPreset;
 
 use Jmf\RenderingPreset\Configuration\PresetConfigurationFileLoader;
 use Jmf\RenderingPreset\Exception\DuplicatePresetException;
+use Jmf\RenderingPreset\Exception\InvalidPresetFileException;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,6 +54,7 @@ class JmfRenderingPresetBundle extends AbstractBundle
      * } $config
      *
      * @throws DuplicatePresetException
+     * @throws InvalidPresetFileException
      */
     #[Override]
     public function loadExtension(

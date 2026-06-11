@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\RenderingPreset\Configuration;
 
 use Jmf\RenderingPreset\Exception\DuplicatePresetException;
+use Jmf\RenderingPreset\Exception\InvalidPresetFileException;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
@@ -26,6 +27,7 @@ final readonly class PresetConfigurationFileLoader
      * @return array<mixed, mixed> preset configs keyed by id
      *
      * @throws DuplicatePresetException
+     * @throws InvalidPresetFileException
      */
     public function load(
         array $config,
@@ -92,11 +94,9 @@ final readonly class PresetConfigurationFileLoader
         ContainerBuilder $container,
     ): void {
         foreach ($directories as $directory) {
-            if (is_dir($directory)) {
-                // DirectoryResource is mtime-based + recursive, so the compiled container is
-                // rebuilt when a file in the directory is added, removed or edited.
-                $container->addResource(new DirectoryResource($directory, '/\.yaml$/'));
-            }
+            // Register even when the directory doesn't exist yet: DirectoryResource handles that
+            // case and will trigger a cache rebuild once the directory is created.
+            $container->addResource(new DirectoryResource($directory, '/\.yaml$/'));
         }
     }
 
@@ -106,6 +106,7 @@ final readonly class PresetConfigurationFileLoader
      * @return array<string, array<mixed, mixed>>
      *
      * @throws DuplicatePresetException
+     * @throws InvalidPresetFileException
      */
     private function loadFromPaths(
         array $directories,
@@ -117,8 +118,8 @@ final readonly class PresetConfigurationFileLoader
                 continue;
             }
 
-            foreach ((new Finder())->files()->in($directory)->name('*.yaml')->sortByName() as $file) {
-                $presetId = substr($file->getRelativePathname(), 0, -strlen('.yaml'));
+            foreach ((new Finder())->files()->depth(0)->in($directory)->name('*.yaml')->sortByName() as $file) {
+                $presetId = $file->getFilenameWithoutExtension();
 
                 if (isset($presets[$presetId])) {
                     throw new DuplicatePresetException([$presetId]);
@@ -128,7 +129,11 @@ final readonly class PresetConfigurationFileLoader
                 // config loader enables for inline config.
                 $parsed = Yaml::parseFile($file->getRealPath(), Yaml::PARSE_CONSTANT);
 
-                $presets[$presetId] = is_array($parsed) ? $parsed : [];
+                if (!is_array($parsed)) {
+                    throw new InvalidPresetFileException($file->getRealPath());
+                }
+
+                $presets[$presetId] = $parsed;
             }
         }
 
