@@ -24,8 +24,8 @@ readonly class PresetLoader
     }
 
     /**
-     * @param array<string, mixed> $presetsConfig
-     * @param non-empty-string     $presetId
+     * @param array<string, mixed>     $presetsConfig
+     * @param callable(string): Preset $parentResolver resolves a parent preset by id (memoized by the caller)
      *
      * @throws MissingRequiredPropertyValueException
      * @throws PropertyValueDomainException
@@ -34,25 +34,10 @@ readonly class PresetLoader
         array $presetsConfig,
         string $presetId,
         PropertyCollection $propertyCollection,
+        callable $parentResolver,
     ): Preset {
         Assert::isMap($presetsConfig);
         Assert::stringNotEmpty($presetId);
-
-        return $this->doLoad($presetsConfig, $presetId, $propertyCollection);
-    }
-
-    /**
-     * @param array<string, mixed> $presetsConfig
-     * @param non-empty-string     $presetId
-     *
-     * @throws MissingRequiredPropertyValueException
-     * @throws PropertyValueDomainException
-     */
-    private function doLoad(
-        array $presetsConfig,
-        string $presetId,
-        PropertyCollection $propertyCollection,
-    ): Preset {
         Assert::keyExists($presetsConfig, $presetId);
 
         $presetConfig = $presetsConfig[$presetId];
@@ -66,7 +51,7 @@ readonly class PresetLoader
             properties: $this->getPresetPropertyCollection($presetId, $presetConfig, $propertyCollection),
         );
 
-        $parent = $this->getParent($presetsConfig, $presetConfig, $propertyCollection);
+        $parent = $this->getParent($presetConfig, $parentResolver);
 
         if (null === $parent) {
             return $preset;
@@ -117,16 +102,12 @@ readonly class PresetLoader
     }
 
     /**
-     * @param array<string, mixed> $presetsConfig
-     * @param array<string, mixed> $presetConfig
-     *
-     * @throws MissingRequiredPropertyValueException
-     * @throws PropertyValueDomainException
+     * @param array<string, mixed>     $presetConfig
+     * @param callable(string): Preset $parentResolver
      */
     private function getParent(
-        array $presetsConfig,
         array $presetConfig,
-        PropertyCollection $propertyCollection,
+        callable $parentResolver,
     ): ?Preset {
         $parentId = $presetConfig['parent'] ?? null;
 
@@ -136,6 +117,6 @@ readonly class PresetLoader
             return null;
         }
 
-        return $this->doLoad($presetsConfig, $parentId, $propertyCollection);
+        return $parentResolver($parentId);
     }
 }

@@ -89,7 +89,7 @@ class RenderingPresetExtension extends AbstractExtension
         array | object $item,
         ?string $source = null,
     ): RenderedPreset {
-        $preset = $this->presetRepository->getCollection()->get($presetId);
+        $preset = $this->presetRepository->get($presetId);
 
         return $this->presetRenderer->render($preset, $item, $source);
     }
