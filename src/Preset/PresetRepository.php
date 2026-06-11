@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Preset;
 
+use Jmf\RenderingPreset\Exception\CircularPresetParentException;
 use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Jmf\RenderingPreset\Exception\PresetNotFoundException;
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
@@ -33,6 +34,17 @@ class PresetRepository implements PresetRepositoryInterface
     #[Override]
     public function get(string $id): Preset
     {
+        return $this->resolve($id, []);
+    }
+
+    /**
+     * @param list<string> $loading preset ids currently being resolved in this call chain
+     *
+     * @throws CircularPresetParentException
+     * @throws PresetNotFoundException
+     */
+    private function resolve(string $id, array $loading): Preset
+    {
         if (array_key_exists($id, $this->presets)) {
             return $this->presets[$id];
         }
@@ -41,13 +53,19 @@ class PresetRepository implements PresetRepositoryInterface
             throw new PresetNotFoundException($id);
         }
 
+        if (in_array($id, $loading, true)) {
+            throw new CircularPresetParentException([...$loading, $id]);
+        }
+
+        $loading[] = $id;
+
         // Only the requested preset and its parent chain are built; shared parents are built once
-        // because the resolver routes back through this memoized get().
+        // because the resolver routes back through this memoized presets cache.
         return $this->presets[$id] = $this->presetLoader->load(
             $this->presetsConfig,
             $id,
             $this->getPropertyCollection(),
-            fn (string $parentId): Preset => $this->get($parentId),
+            fn (string $parentId): Preset => $this->resolve($parentId, $loading),
         );
     }
 
