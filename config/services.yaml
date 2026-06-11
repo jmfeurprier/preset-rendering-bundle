@@ -8,18 +8,13 @@ services:
         resource: '../src/'
 
     Jmf\RenderingPreset\Preset\PresetRepository:
+        factory: ['@Jmf\RenderingPreset\Preset\PresetRepositoryFactory', 'create']
         arguments:
-            $presetsConfig: '%jmf_rendering_preset.preset_configurations%'
+            - '%jmf_rendering_preset.preset_configurations%'
+            - '%jmf_rendering_preset.property_configurations%'
 
     Jmf\RenderingPreset\Preset\PresetRepositoryInterface:
         alias: Jmf\RenderingPreset\Preset\PresetRepository
-
-    Jmf\RenderingPreset\Property\PropertyRepository:
-        arguments:
-            $propertiesConfig: '%jmf_rendering_preset.property_configurations%'
-
-    Jmf\RenderingPreset\Property\PropertyRepositoryInterface:
-        alias: Jmf\RenderingPreset\Property\PropertyRepository
 
     Jmf\RenderingPreset\Twig\RenderingPresetExtension:
         arguments:

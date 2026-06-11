@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Jmf\RenderingPreset\Preset;
 
 use Jmf\RenderingPreset\Exception\CircularPresetParentException;
-use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
 use Jmf\RenderingPreset\Exception\PresetNotFoundException;
 use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
-use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Jmf\RenderingPreset\Property\PropertyCollection;
-use Jmf\RenderingPreset\Property\PropertyRepositoryInterface;
 use Override;
 
 class PresetRepository implements PresetRepositoryInterface
@@ -21,14 +18,12 @@ class PresetRepository implements PresetRepositoryInterface
      */
     private array $presets = [];
 
-    private PropertyCollection $propertyCollection;
-
     /**
      * @param array<string, array<string, mixed>> $presetsConfig
      */
     public function __construct(
         private readonly PresetLoader $presetLoader,
-        private readonly PropertyRepositoryInterface $propertyRepository,
+        private readonly PropertyCollection $propertyCollection,
         private readonly array $presetsConfig,
     ) {
     }
@@ -43,11 +38,9 @@ class PresetRepository implements PresetRepositoryInterface
      * @param list<string> $loading preset ids currently being resolved in this call chain
      *
      * @throws CircularPresetParentException
-     * @throws DuplicatePropertyException
      * @throws MissingRequiredPropertyValueException
      * @throws PresetNotFoundException
      * @throws PropertyValueDomainException
-     * @throws ReservedPropertyKeyException
      */
     private function resolve(
         string $id,
@@ -77,19 +70,10 @@ class PresetRepository implements PresetRepositoryInterface
         return $this->presets[$id] = $this->presetLoader->load(
             $this->presetsConfig,
             $id,
-            $this->getPropertyCollection(),
+            $this->propertyCollection,
             fn(
                 string $parentId,
             ): Preset => $this->resolve($parentId, $loading),
         );
-    }
-
-    /**
-     * @throws DuplicatePropertyException
-     * @throws ReservedPropertyKeyException
-     */
-    private function getPropertyCollection(): PropertyCollection
-    {
-        return $this->propertyCollection ??= $this->propertyRepository->getCollection();
     }
 }
