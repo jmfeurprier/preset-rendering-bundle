@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Preset;
 
+use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Jmf\RenderingPreset\Exception\PresetNotFoundException;
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Jmf\RenderingPreset\Property\PropertyCollection;
@@ -51,6 +52,7 @@ class PresetRepository implements PresetRepositoryInterface
     }
 
     /**
+     * @throws DuplicatePropertyException
      * @throws ReservedPropertyKeyException
      */
     private function getPropertyCollection(): PropertyCollection
