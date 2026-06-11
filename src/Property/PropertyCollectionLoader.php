@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Property;
 
+use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Webmozart\Assert\Assert;
 
@@ -17,6 +18,7 @@ readonly class PropertyCollectionLoader
     /**
      * @param array<string, mixed> $propertiesConfig
      *
+     * @throws DuplicatePropertyException
      * @throws ReservedPropertyKeyException
      */
     public function load(array $propertiesConfig): PropertyCollection

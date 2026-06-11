@@ -13,59 +13,59 @@ final class PresetPropertyCollectionTest extends TestCase
 {
     public function testEmptyCollection(): void
     {
-        $collection = new PresetPropertyCollection([]);
+        $presetPropertyCollection = new PresetPropertyCollection([]);
 
-        self::assertSame([], $collection->all());
-        self::assertFalse($collection->has('foo'));
+        self::assertSame([], $presetPropertyCollection->all());
+        self::assertFalse($presetPropertyCollection->has('foo'));
     }
 
     public function testHas(): void
     {
-        $collection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
+        $presetPropertyCollection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
 
-        self::assertTrue($collection->has('foo'));
-        self::assertFalse($collection->has('baz'));
+        self::assertTrue($presetPropertyCollection->has('foo'));
+        self::assertFalse($presetPropertyCollection->has('baz'));
     }
 
     public function testGet(): void
     {
-        $property   = new PresetProperty('foo', 'bar');
-        $collection = new PresetPropertyCollection([$property]);
+        $presetProperty   = new PresetProperty('foo', 'bar');
+        $presetPropertyCollection = new PresetPropertyCollection([$presetProperty]);
 
-        self::assertSame($property, $collection->get('foo'));
+        self::assertSame($presetProperty, $presetPropertyCollection->get('foo'));
     }
 
     public function testGetThrowsWhenNotFound(): void
     {
-        $collection = new PresetPropertyCollection([]);
+        $presetPropertyCollection = new PresetPropertyCollection([]);
 
         $this->expectException(PresetPropertyNotFoundException::class);
 
-        $collection->get('missing');
+        $presetPropertyCollection->get('missing');
     }
 
     public function testTryGet(): void
     {
-        $property   = new PresetProperty('foo', 'bar');
-        $collection = new PresetPropertyCollection([$property]);
+        $presetProperty   = new PresetProperty('foo', 'bar');
+        $presetPropertyCollection = new PresetPropertyCollection([$presetProperty]);
 
-        self::assertSame($property, $collection->tryGet('foo'));
-        self::assertNull($collection->tryGet('missing'));
+        self::assertSame($presetProperty, $presetPropertyCollection->tryGet('foo'));
+        self::assertNull($presetPropertyCollection->tryGet('missing'));
     }
 
     public function testGetValue(): void
     {
-        $collection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
+        $presetPropertyCollection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
 
-        self::assertSame('bar', $collection->getValue('foo'));
+        self::assertSame('bar', $presetPropertyCollection->getValue('foo'));
     }
 
     public function testTryGetValue(): void
     {
-        $collection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
+        $presetPropertyCollection = new PresetPropertyCollection([new PresetProperty('foo', 'bar')]);
 
-        self::assertSame('bar', $collection->tryGetValue('foo'));
-        self::assertNull($collection->tryGetValue('missing'));
-        self::assertSame('default', $collection->tryGetValue('missing', 'default'));
+        self::assertSame('bar', $presetPropertyCollection->tryGetValue('foo'));
+        self::assertNull($presetPropertyCollection->tryGetValue('missing'));
+        self::assertSame('default', $presetPropertyCollection->tryGetValue('missing', 'default'));
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Property;
 
+use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
+use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Override;
 
 class PropertyRepository implements PropertyRepositoryInterface
@@ -22,6 +24,15 @@ class PropertyRepository implements PropertyRepositoryInterface
     #[Override]
     public function getCollection(): PropertyCollection
     {
-        return $this->propertyCollection ??= $this->propertyCollectionLoader->load($this->propertiesConfig);
+        return $this->propertyCollection ??= $this->loadCollection();
+    }
+
+    /**
+     * @throws DuplicatePropertyException
+     * @throws ReservedPropertyKeyException
+     */
+    private function loadCollection(): PropertyCollection
+    {
+        return $this->propertyCollectionLoader->load($this->propertiesConfig);
     }
 }
