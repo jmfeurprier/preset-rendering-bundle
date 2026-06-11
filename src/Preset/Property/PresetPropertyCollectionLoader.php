@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Preset\Property;
+namespace Jmf\RenderingPreset\Preset\Property;
 
 use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
 use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
-use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 use Jmf\RenderingPreset\Property\PropertyCollection;
 use Webmozart\Assert\Assert;
 

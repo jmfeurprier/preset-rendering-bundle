@@ -2,21 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Tests\Configuration\Property;
+namespace Jmf\RenderingPreset\Tests\Property;
 
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
+use Jmf\RenderingPreset\Property\PropertyLoader;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-final class PropertyConfigurationLoaderTest extends TestCase
+final class PropertyLoaderTest extends TestCase
 {
-    private \Jmf\RenderingPreset\Configuration\Property\PropertyLoader $propertyConfigurationLoader;
+    private PropertyLoader $propertyLoader;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->propertyConfigurationLoader = new \Jmf\RenderingPreset\Configuration\Property\PropertyLoader();
+        $this->propertyLoader = new PropertyLoader();
     }
 
     /**
@@ -27,7 +28,7 @@ final class PropertyConfigurationLoaderTest extends TestCase
         $propertyKey    = 'foo';
         $propertyConfig = [];
 
-        $propertyConfiguration = $this->propertyConfigurationLoader->load(
+        $propertyConfiguration = $this->propertyLoader->load(
             $propertyKey,
             $propertyConfig,
         );
@@ -41,7 +42,7 @@ final class PropertyConfigurationLoaderTest extends TestCase
     /**
      * @return array{0: array<string, mixed>, 1: bool, 2: mixed, 3: mixed[]}[]
      */
-    public static function dataProviderLoad(): iterable
+    public static function dataProviderLoad(): array
     {
         return [
             [
@@ -87,7 +88,7 @@ final class PropertyConfigurationLoaderTest extends TestCase
         mixed $default,
         iterable $choices,
     ): void {
-        $propertyConfiguration = $this->propertyConfigurationLoader->load(
+        $propertyConfiguration = $this->propertyLoader->load(
             'foo',
             $propertyConfig,
         );

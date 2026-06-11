@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionLoader;
-use Jmf\RenderingPreset\Configuration\Preset\Template\PresetTemplateLoader;
 use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
 use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
-use Jmf\RenderingPreset\Preset\Preset;
 use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollectionLoader;
 use Jmf\RenderingPreset\Property\PropertyCollection;
 use Jmf\TemplateRendering\TemplateInterface;
 use Webmozart\Assert\Assert;

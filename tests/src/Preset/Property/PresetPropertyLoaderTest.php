@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Tests\Configuration\Preset\Property;
+namespace Jmf\RenderingPreset\Tests\Preset\Property;
 
-use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyLoader;
 use Jmf\RenderingPreset\Exception\RenderingPresetException;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyLoader;
 use Jmf\RenderingPreset\Property\Property;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -18,7 +18,7 @@ final class PresetPropertyLoaderTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->presetPropertyLoader = new \Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyLoader();
+        $this->presetPropertyLoader = new PresetPropertyLoader();
     }
 
     /**
@@ -65,7 +65,7 @@ final class PresetPropertyLoaderTest extends TestCase
     /**
      * @return array{0: non-empty-string, 1: mixed, 2: bool, 3?: mixed, 4?: mixed[]}[]
      */
-    public static function dataProviderValidCases(): iterable
+    public static function dataProviderValidCases(): array
     {
         return [
             [

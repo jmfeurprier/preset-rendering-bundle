@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Property;
 
-use Jmf\RenderingPreset\Configuration\Property\PropertyCollectionLoader;
 use Override;
 
 class PropertyRepository implements PropertyRepositoryInterface

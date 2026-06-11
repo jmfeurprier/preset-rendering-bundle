@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Preset\Template;
+namespace Jmf\RenderingPreset\Preset;
 
 use Jmf\TemplateRendering\FileTemplate;
 use Jmf\TemplateRendering\TemplateInterface;

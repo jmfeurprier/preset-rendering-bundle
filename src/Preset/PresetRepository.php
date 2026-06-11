@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\RenderingPreset\Configuration\Preset\PresetLoader;
 use Jmf\RenderingPreset\Exception\PresetNotFoundException;
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Jmf\RenderingPreset\Property\PropertyCollection;

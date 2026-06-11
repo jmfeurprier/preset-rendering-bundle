@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Preset\Property;
-
-use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
+namespace Jmf\RenderingPreset\Preset\Property;
 
 readonly class PresetPropertyCollectionMerger
 {

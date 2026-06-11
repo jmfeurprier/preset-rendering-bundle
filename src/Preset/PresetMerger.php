@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Preset;
+namespace Jmf\RenderingPreset\Preset;
 
-use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionMerger;
-use Jmf\RenderingPreset\Preset\Preset;
 use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollectionMerger;
 
 readonly class PresetMerger
 {

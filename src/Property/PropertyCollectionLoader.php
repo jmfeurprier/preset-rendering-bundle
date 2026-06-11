@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\RenderingPreset\Configuration\Property;
+namespace Jmf\RenderingPreset\Property;
 
 use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
-use Jmf\RenderingPreset\Property\PropertyCollection;
 use Webmozart\Assert\Assert;
 
 readonly class PropertyCollectionLoader
