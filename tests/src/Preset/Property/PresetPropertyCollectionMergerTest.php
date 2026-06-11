@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Tests\Preset\Property;
 
-use Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionMerger;
 use Jmf\RenderingPreset\Exception\PresetPropertyNotFoundException;
 use Jmf\RenderingPreset\Preset\Property\PresetProperty;
 use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
+use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollectionMerger;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class PresetPropertyCollectionMergerTest extends TestCase
 {
-    private \Jmf\RenderingPreset\Configuration\Preset\Property\PresetPropertyCollectionMerger $presetPropertyCollectionMerger;
+    private PresetPropertyCollectionMerger $presetPropertyCollectionMerger;
 
     #[Override]
     protected function setUp(): void
@@ -23,11 +23,7 @@ final class PresetPropertyCollectionMergerTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     0: array<string, mixed>,
-     *     1: array<string, mixed>,
-     *     2: array<string, mixed>,
-     * }[]
+     * @return array<string, mixed>[][]
      */
     public static function dataProviderMerge(): iterable
     {

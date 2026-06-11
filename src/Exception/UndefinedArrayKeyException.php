@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\RenderingPreset\Exception;
 
 use Jmf\RenderingPreset\Preset\Preset;
-use function sprintf;
 
 class UndefinedArrayKeyException extends UnreadableItemValueException
 {

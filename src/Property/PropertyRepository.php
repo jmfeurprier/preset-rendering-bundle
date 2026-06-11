@@ -22,12 +22,6 @@ class PropertyRepository implements PropertyRepositoryInterface
     #[Override]
     public function getCollection(): PropertyCollection
     {
-        if (!isset($this->propertyCollection)) {
-            $this->propertyCollection = $this->propertyCollectionLoader->load(
-                $this->propertiesConfig,
-            );
-        }
-
-        return $this->propertyCollection;
+        return $this->propertyCollection ??= $this->propertyCollectionLoader->load($this->propertiesConfig);
     }
 }

@@ -9,7 +9,7 @@ use Throwable;
 
 abstract class UnreadableItemValueException extends RenderingPresetException
 {
-    public function __construct(
+    protected function __construct(
         private readonly Preset $preset,
         string $message,
         ?Throwable $previous = null,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Property;
 
+use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Webmozart\Assert\Assert;
 
 readonly class PropertyCollection
@@ -15,6 +16,8 @@ readonly class PropertyCollection
 
     /**
      * @param Property[] $properties
+     *
+     * @throws DuplicatePropertyException
      */
     public function __construct(
         iterable $properties,
@@ -24,8 +27,13 @@ readonly class PropertyCollection
         $indexed = [];
 
         foreach ($properties as $property) {
-            // @todo Validate key unicity.
-            $indexed[$property->getKey()] = $property;
+            $key = $property->getKey();
+
+            if (array_key_exists($key, $indexed)) {
+                throw new DuplicatePropertyException($key);
+            }
+
+            $indexed[$key] = $property;
         }
 
         $this->properties = $indexed;

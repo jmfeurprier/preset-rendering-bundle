@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Exception;
 
-class DuplicatePresetException extends RenderingPresetException
+class DuplicatePresetException extends InvalidConfigurationException
 {
     /**
      * @param non-empty-list<string> $presetIds
