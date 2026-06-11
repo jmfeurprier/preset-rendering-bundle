@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Preset;
 
+use Jmf\RenderingPreset\Exception\InvalidPresetConfigurationException;
 use Jmf\RenderingPreset\Exception\MissingRequiredPropertyValueException;
 use Jmf\RenderingPreset\Exception\PropertyValueDomainException;
 use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
@@ -22,25 +23,23 @@ readonly class PresetLoader
     }
 
     /**
-     * @param array<string, mixed>     $presetsConfig
+     * @param array<string, mixed>     $presetConfig
+     * @param non-empty-string         $presetId
      * @param callable(string): Preset $parentResolver resolves a parent preset by id (memoized by the caller)
      *
+     * @throws InvalidPresetConfigurationException
      * @throws MissingRequiredPropertyValueException
      * @throws PropertyValueDomainException
      */
     public function load(
-        array $presetsConfig,
+        array $presetConfig,
         string $presetId,
         PropertyCollection $propertyCollection,
         callable $parentResolver,
     ): Preset {
-        Assert::isMap($presetsConfig);
-        Assert::stringNotEmpty($presetId);
-        Assert::keyExists($presetsConfig, $presetId);
-
-        $presetConfig = $presetsConfig[$presetId];
-
-        Assert::isMap($presetConfig);
+        if ([] !== $presetConfig && array_is_list($presetConfig)) {
+            throw new InvalidPresetConfigurationException($presetId);
+        }
 
         $preset = new Preset(
             id:         $presetId,

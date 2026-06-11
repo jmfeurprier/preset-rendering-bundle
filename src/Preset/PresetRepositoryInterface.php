@@ -12,6 +12,8 @@ interface PresetRepositoryInterface
     /**
      * Resolves a single preset (and its parent chain) on demand, building only what is requested.
      *
+     * @param non-empty-string $id
+     *
      * @throws PresetNotFoundException
      * @throws InvalidConfigurationException
      */
