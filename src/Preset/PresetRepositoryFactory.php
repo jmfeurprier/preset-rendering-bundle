@@ -21,7 +21,7 @@ readonly class PresetRepositoryFactory
     public function create(
         array $presetsConfig,
         array $propertiesConfig,
-    ): PresetRepository {
+    ): PresetRepositoryInterface {
         return new PresetRepository(
             $this->presetLoader,
             $this->propertyCollectionLoader->load($propertiesConfig),
