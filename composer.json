@@ -6,7 +6,6 @@
     "require": {
         "php": ">=8.3",
         "jmf/template-rendering": "^2.0",
-        "symfony/cache-contracts": "^3.0",
         "symfony/config": "^7.0|^8.0",
         "symfony/framework-bundle": "^7.0|^8.0",
         "symfony/property-access": "^7.0|^8.0",

@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset;
 
-use Jmf\RenderingPreset\Preset\CacheablePresetRepository;
-use Jmf\RenderingPreset\Preset\PresetRepository;
-use Jmf\RenderingPreset\Preset\PresetRepositoryInterface;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class JmfRenderingPresetBundle extends AbstractBundle
@@ -58,15 +54,6 @@ class JmfRenderingPresetBundle extends AbstractBundle
         $configurator->import('../config/services.yaml');
 
         $this->loadParameters($config, $configurator);
-
-        $configurator->services()
-            ->get(CacheablePresetRepository::class)
-            ->arg('$wrapped', new Reference(PresetRepository::class))
-        ;
-
-        $configurator->services()
-            ->alias(PresetRepositoryInterface::class, CacheablePresetRepository::class)
-        ;
     }
 
     /**
