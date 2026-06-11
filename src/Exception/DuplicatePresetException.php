@@ -14,7 +14,7 @@ class DuplicatePresetException extends InvalidConfigurationException
     ) {
         parent::__construct(
             sprintf(
-                'Duplicate preset configuration for %s: defined both inline under "presets" and via "paths".',
+                'Duplicate preset configuration for: %s.',
                 implode(', ', $this->presetIds),
             ),
         );

@@ -83,7 +83,7 @@ final readonly class PresetConfigurationFileLoader
             $directories[] = $directory;
         }
 
-        return $directories;
+        return array_values(array_unique($directories));
     }
 
     /**
