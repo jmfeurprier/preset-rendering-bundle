@@ -30,9 +30,6 @@ class PresetRepository implements PresetRepositoryInterface
     ) {
     }
 
-    /**
-     * @param non-empty-string $id
-     */
     #[Override]
     public function get(string $id): Preset
     {
