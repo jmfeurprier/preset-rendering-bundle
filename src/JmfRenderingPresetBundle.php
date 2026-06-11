@@ -6,7 +6,9 @@ namespace Jmf\RenderingPreset;
 
 use Jmf\RenderingPreset\Configuration\PresetConfigurationFileLoader;
 use Jmf\RenderingPreset\Exception\DuplicatePresetException;
+use Jmf\RenderingPreset\Exception\DuplicatePropertyException;
 use Jmf\RenderingPreset\Exception\InvalidPresetFileException;
+use Jmf\RenderingPreset\Exception\ReservedPropertyKeyException;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -54,7 +56,9 @@ class JmfRenderingPresetBundle extends AbstractBundle
      * } $config
      *
      * @throws DuplicatePresetException
+     * @throws DuplicatePropertyException
      * @throws InvalidPresetFileException
+     * @throws ReservedPropertyKeyException
      */
     #[Override]
     public function loadExtension(
