@@ -16,10 +16,4 @@ interface PresetRepositoryInterface
      * @throws InvalidConfigurationException
      */
     public function get(string $id): Preset;
-
-    /**
-     * @throws PresetNotFoundException
-     * @throws InvalidConfigurationException
-     */
-    public function getCollection(): PresetCollection;
 }

@@ -51,16 +51,6 @@ class PresetRepository implements PresetRepositoryInterface
         );
     }
 
-    #[Override]
-    public function getCollection(): PresetCollection
-    {
-        foreach (array_keys($this->presetsConfig) as $id) {
-            $this->get($id);
-        }
-
-        return new PresetCollection($this->presets);
-    }
-
     /**
      * @throws ReservedPropertyKeyException
      */
