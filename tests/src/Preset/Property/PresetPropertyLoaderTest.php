@@ -63,7 +63,7 @@ final class PresetPropertyLoaderTest extends TestCase
     }
 
     /**
-     * @return array{0: non-empty-string, 1: mixed, 2: bool, 3?: mixed, 4?: mixed[]}[]
+     * @return array{0: non-empty-string, 1: mixed, 2: bool, 3?: mixed, 4?: scalar[]}[]
      */
     public static function dataProviderValidCases(): array
     {
@@ -89,7 +89,7 @@ final class PresetPropertyLoaderTest extends TestCase
 
     /**
      * @param non-empty-string $key
-     * @param mixed[]          $choices
+     * @param scalar[]         $choices
      *
      * @throws RenderingPresetException
      */

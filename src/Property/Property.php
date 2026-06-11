@@ -10,7 +10,7 @@ readonly class Property
 {
     /**
      * @param non-empty-string $key
-     * @param mixed[]          $choices
+     * @param scalar[]         $choices
      */
     public function __construct(
         private string $key,
@@ -43,7 +43,7 @@ readonly class Property
     }
 
     /**
-     * @return mixed[]
+     * @return scalar[]
      */
     public function getChoices(): iterable
     {

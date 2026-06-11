@@ -66,7 +66,7 @@ readonly class PropertyLoader
     /**
      * @param array<string, mixed> $propertyConfig
      *
-     * @return mixed[]
+     * @return scalar[]
      */
     private function getChoices(array $propertyConfig): iterable
     {
