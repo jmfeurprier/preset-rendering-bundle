@@ -41,6 +41,11 @@ return static function (DefinitionConfigurator $definition): void {
                 ->info('Twig functions prefix.')
                 ->defaultValue(RenderingPresetExtension::PREFIX_DEFAULT)
             ->end()
+            ->arrayNode('paths')
+                ->info('Directories of per-preset files; filename (sans .yaml) is the preset id.')
+                ->scalarPrototype()->cannotBeEmpty()->end()
+                ->defaultValue([])
+            ->end()
         ->end()
     ;
 };

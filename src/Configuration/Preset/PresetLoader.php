@@ -48,7 +48,11 @@ readonly class PresetLoader
             id:         $presetId,
             source:     $this->getSource($presetConfig),
             template:   $this->getTemplate($presetConfig),
-            properties: $this->getPresetPropertyCollection($presetId, $presetConfig, $propertyCollection),
+            properties: $this->getPresetPropertyCollection(
+                            $presetId,
+                            $presetConfig,
+                            $propertyCollection,
+                        ),
         );
 
         $parent = $this->getParent($presetConfig, $parentResolver);

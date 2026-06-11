@@ -33,7 +33,7 @@ class PresetRepository implements PresetRepositoryInterface
     #[Override]
     public function get(string $id): Preset
     {
-        if (isset($this->presets[$id])) {
+        if (array_key_exists($id, $this->presets)) {
             return $this->presets[$id];
         }
 
@@ -46,7 +46,7 @@ class PresetRepository implements PresetRepositoryInterface
         return $this->presets[$id] = $this->presetLoader->load(
             $this->presetsConfig,
             $id,
-            $this->propertyCollection(),
+            $this->getPropertyCollection(),
             fn (string $parentId): Preset => $this->get($parentId),
         );
     }
@@ -54,7 +54,7 @@ class PresetRepository implements PresetRepositoryInterface
     /**
      * @throws ReservedPropertyKeyException
      */
-    private function propertyCollection(): PropertyCollection
+    private function getPropertyCollection(): PropertyCollection
     {
         return $this->propertyCollection ??= $this->propertyRepository->getCollection();
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset;
 
+use Jmf\RenderingPreset\Configuration\PresetConfigurationFileLoader;
+use Jmf\RenderingPreset\Exception\DuplicatePresetException;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,6 +24,11 @@ class JmfRenderingPresetBundle extends AbstractBundle
     ];
 
     protected string $extensionAlias = 'jmf_rendering_preset';
+
+    public function __construct(
+        private readonly PresetConfigurationFileLoader $presetConfigurationFileLoader = new PresetConfigurationFileLoader(),
+    ) {
+    }
 
     #[Override]
     public function configure(DefinitionConfigurator $definition): void
@@ -44,6 +51,8 @@ class JmfRenderingPresetBundle extends AbstractBundle
      *     }>,
      *     twig_functions_prefix: string,
      * } $config
+     *
+     * @throws DuplicatePresetException
      */
     #[Override]
     public function loadExtension(
@@ -52,6 +61,12 @@ class JmfRenderingPresetBundle extends AbstractBundle
         ContainerBuilder $container,
     ): void {
         $configurator->import('../config/services.yaml');
+
+        $config['presets'] = $this->presetConfigurationFileLoader->load(
+            $config,
+            $container,
+            $this->extensionAlias,
+        );
 
         $this->loadParameters($config, $configurator);
     }
