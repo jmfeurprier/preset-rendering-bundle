@@ -19,3 +19,6 @@ services:
     Jmf\RenderingPreset\Twig\RenderingPresetExtension:
         arguments:
             $prefix: '%jmf_rendering_preset.twig_functions_prefix%'
+
+    Jmf\TemplateRendering\TemplateRendererInterface:
+        class: Jmf\TemplateRendering\TemplateRenderer
