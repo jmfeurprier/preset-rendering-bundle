@@ -16,8 +16,6 @@ readonly class PresetTemplateLoader
     public function load(
         array $presetConfig,
     ): ?TemplateInterface {
-        Assert::isMap($presetConfig);
-
         $templatePath = $presetConfig['template'] ?? null;
 
         if (null === $templatePath) {

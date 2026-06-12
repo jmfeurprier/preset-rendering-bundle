@@ -24,7 +24,7 @@ final readonly class PresetConfigurationFileLoader
      * @param array<string, mixed> $config         resolved `jmf_rendering_preset` config (`paths` + `presets`)
      * @param string               $extensionAlias used to derive the default path
      *
-     * @return array<mixed, mixed> preset configs keyed by id
+     * @return array<string, array<string, mixed>>
      *
      * @throws DuplicatePresetException
      * @throws InvalidPresetFileException
@@ -41,7 +41,8 @@ final readonly class PresetConfigurationFileLoader
         $presetsFromPaths = $this->loadFromPaths($directories);
 
         $inlinePresets = $config['presets'];
-        Assert::isArray($inlinePresets);
+        Assert::isMap($inlinePresets);
+        Assert::allIsMap($inlinePresets);
 
         $duplicates = array_intersect_key($presetsFromPaths, $inlinePresets);
 
@@ -103,7 +104,7 @@ final readonly class PresetConfigurationFileLoader
     /**
      * @param list<string> $directories
      *
-     * @return array<string, array<mixed, mixed>>
+     * @return array<string, array<string, mixed>>
      *
      * @throws DuplicatePresetException
      * @throws InvalidPresetFileException
@@ -133,6 +134,7 @@ final readonly class PresetConfigurationFileLoader
                     throw new InvalidPresetFileException($file->getRealPath());
                 }
 
+                /** @var array<string, mixed> $parsed */
                 $presets[$presetId] = $parsed;
             }
         }

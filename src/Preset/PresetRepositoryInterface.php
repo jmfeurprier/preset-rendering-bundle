@@ -19,7 +19,6 @@ interface PresetRepositoryInterface
      * @param non-empty-string $id
      *
      * @throws CircularPresetParentException
-     * @throws InvalidConfigurationException
      * @throws InvalidPresetConfigurationException
      * @throws MissingRequiredPropertyValueException
      * @throws PresetNotFoundException

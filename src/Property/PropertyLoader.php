@@ -12,7 +12,7 @@ readonly class PropertyLoader
     /**
      * @const string[]
      */
-    private const iterable RESERVED_KEYS = [
+    private const array RESERVED_KEYS = [
         'parent',
         'source',
         'template',

@@ -23,7 +23,11 @@ readonly class PresetPropertyLoader
     ): PresetProperty {
         return new PresetProperty(
             $property->getKey(),
-            $this->getValue($presetId, $presetConfig, $property),
+            $this->getValue(
+                $presetId,
+                $presetConfig,
+                $property,
+            ),
         );
     }
 
