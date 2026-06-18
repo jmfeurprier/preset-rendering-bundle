@@ -7,6 +7,7 @@ namespace Jmf\RenderingPreset\Configuration;
 use Jmf\RenderingPreset\Exception\DuplicatePresetException;
 use Jmf\RenderingPreset\Exception\InvalidPresetFileException;
 use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -95,9 +96,13 @@ final readonly class PresetConfigurationFileLoader
         ContainerBuilder $container,
     ): void {
         foreach ($directories as $directory) {
-            // Register even when the directory doesn't exist yet: DirectoryResource handles that
-            // case and will trigger a cache rebuild once the directory is created.
-            $container->addResource(new DirectoryResource($directory, '/\.yaml$/'));
+            if (is_dir($directory)) {
+                // Watch for changes inside the directory (new/modified/deleted .yaml files).
+                $container->addResource(new DirectoryResource($directory, '/\.yaml$/'));
+            } else {
+                // Watch for the directory being created so the cache is rebuilt once it appears.
+                $container->addResource(new FileExistenceResource($directory));
+            }
         }
     }
 
