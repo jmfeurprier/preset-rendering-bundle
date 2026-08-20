@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Jmf\RenderingPreset\Tests\Preset\Rendering;
 
 use Jmf\RenderingPreset\Exception\UndefinedArrayKeyException;
+use Jmf\RenderingPreset\Exception\UnexpectedItemSourceException;
 use Jmf\RenderingPreset\Exception\UnreadableObjectPropertyException;
 use Jmf\RenderingPreset\Preset\Preset;
 use Jmf\RenderingPreset\Preset\Property\PresetPropertyCollection;
 use Jmf\RenderingPreset\Preset\Rendering\ItemValueReader;
+use Jmf\RenderingPreset\Tests\Fixture\PureEnum;
+use Jmf\RenderingPreset\Tests\Fixture\StatusEnum;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use UnitEnum;
 
 final class ItemValueReaderTest extends TestCase
 {
@@ -28,13 +33,24 @@ final class ItemValueReaderTest extends TestCase
         $this->itemValueReader  = new ItemValueReader($this->propertyAccessor);
     }
 
-    public function testReadReturnsNullWhenNoSource(): void
+    public function testReadReturnsArrayItemWhenNoSource(): void
     {
         $preset = $this->makePreset(null);
+        $item   = ['name' => 'Alice'];
 
-        $result = $this->itemValueReader->read($preset, ['name' => 'Alice']);
+        $result = $this->itemValueReader->read($preset, $item);
 
-        self::assertNull($result);
+        self::assertSame($item, $result);
+    }
+
+    public function testReadReturnsObjectItemWhenNoSource(): void
+    {
+        $preset = $this->makePreset(null);
+        $item   = new \stdClass();
+
+        $result = $this->itemValueReader->read($preset, $item);
+
+        self::assertSame($item, $result);
     }
 
     public function testReadFromArrayByPresetSource(): void
@@ -90,6 +106,103 @@ final class ItemValueReaderTest extends TestCase
         $this->expectException(UnreadableObjectPropertyException::class);
 
         $this->itemValueReader->read($preset, $object);
+    }
+
+    #[DataProvider('provideScalarItems')]
+    public function testReadFromScalarItemReturnsItem(mixed $item): void
+    {
+        $preset = $this->makePreset(null);
+
+        $result = $this->itemValueReader->read($preset, $item);
+
+        self::assertSame($item, $result);
+    }
+
+    /**
+     * @return array<string, array{mixed}>
+     */
+    public static function provideScalarItems(): array
+    {
+        return [
+            'string'       => ['Alice'],
+            'empty string' => [''],
+            'integer'      => [42],
+            'float'        => [12.5],
+            'true'         => [true],
+            'false'        => [false],
+            'null'         => [null],
+        ];
+    }
+
+    public function testReadFromScalarItemIgnoresPresetSource(): void
+    {
+        $preset = $this->makePreset('name');
+
+        $result = $this->itemValueReader->read($preset, 'Alice');
+
+        self::assertSame('Alice', $result);
+    }
+
+    public function testReadFromScalarItemWithExplicitSourceThrows(): void
+    {
+        $preset = $this->makePreset(null);
+
+        $this->expectException(UnexpectedItemSourceException::class);
+
+        $this->itemValueReader->read($preset, 'Alice', 'name');
+    }
+
+    #[DataProvider('provideEnumItems')]
+    public function testReadFromEnumItemReturnsItem(UnitEnum $item): void
+    {
+        $preset = $this->makePreset(null);
+
+        $result = $this->itemValueReader->read($preset, $item);
+
+        self::assertSame($item, $result);
+    }
+
+    /**
+     * @return array<string, array{UnitEnum}>
+     */
+    public static function provideEnumItems(): array
+    {
+        return [
+            'backed enum' => [StatusEnum::Alive],
+            'pure enum'   => [PureEnum::Alive],
+        ];
+    }
+
+    public function testReadFromEnumItemIgnoresPresetSource(): void
+    {
+        $preset = $this->makePreset('lifeStatus');
+
+        $result = $this->itemValueReader->read($preset, StatusEnum::Alive);
+
+        self::assertSame(StatusEnum::Alive, $result);
+    }
+
+    public function testReadFromEnumItemWithExplicitSourceThrows(): void
+    {
+        $preset = $this->makePreset(null);
+
+        $this->expectException(UnexpectedItemSourceException::class);
+
+        $this->itemValueReader->read($preset, StatusEnum::Alive, 'lifeStatus');
+    }
+
+    public function testReadFromObjectHoldingAnEnumStillUsesPresetSource(): void
+    {
+        $preset = $this->makePreset('lifeStatus');
+        $item   = new \stdClass();
+
+        $this->propertyAccessor
+            ->method('getValue')
+            ->willReturn(StatusEnum::Alive);
+
+        $result = $this->itemValueReader->read($preset, $item);
+
+        self::assertSame(StatusEnum::Alive, $result);
     }
 
     /**

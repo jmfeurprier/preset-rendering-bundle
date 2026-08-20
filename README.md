@@ -92,7 +92,7 @@ jmf_rendering_preset:
 | Key        | Type   | Description |
 |------------|--------|-------------|
 | `parent`   | string | Inherit from another preset id. Child values take precedence. |
-| `source`   | string | Property path on the item to read the value from (e.g. `createdAt`). Overrides the caller's `$source` argument. |
+| `source`   | string | Property path on the item to read the value from (e.g. `createdAt`). Used when the caller passes no `$source`. Ignored when the item is neither an array nor an object. |
 | `template` | string | Twig template path used to render the value. |
 | `<property>` | mixed | Any property key defined under `properties:` (e.g. `align`, `label`). |
 
@@ -104,6 +104,10 @@ jmf_rendering_preset:
 
 {# Override the source field at call site. #}
 {{ preset_render('date_time', item, 'updatedAt') }}
+
+{# The item is the value: no source anywhere, works for any type. #}
+{{ preset_render('price', 12.5) }}
+{{ preset_render('age', age) }}
 
 {# Get a RenderedPreset object to access content + properties separately. #}
 {% set rendered = preset_get('price', item) %}
@@ -121,5 +125,49 @@ jmf_rendering_preset:
 ```
 
 Templates receive:
-- `_value` : the resolved value read from the item via `source`
-- `_item` : the original item (array or object)
+- `_value` : the resolved value (read from the item via `source`, or the item itself when no `source` applies)
+- `_item` : the original item
+
+## Items and sources
+
+The item can be anything: an array, an object, or a plain value.
+
+**When no `source` applies, the item itself is the value.** `_item` always carries the original item,
+whatever the resolution.
+
+| Item | Call-site `source` | Preset `source` | `_value` |
+|------|--------------------|-----------------|----------|
+| any | none | none | the item itself |
+| array / object | set | any | read from the item |
+| array / object | none | set | read from the item |
+| value (scalar, null, enum) | none | set | the item itself (`source` does not apply, and is ignored) |
+| value (scalar, null, enum) | set | any | `UnexpectedItemSourceException` |
+
+**Enums count as values, not as containers.** No source can be read from an enum, so a preset `source`
+simply does not apply to one. That lets a single preset serve both callers:
+
+```twig
+{# reads `lifeStatus` off the entity, through the preset's own source #}
+{{ preset_render('life_status', individual) }}
+
+{# the enum is already the value: the preset's source does not apply #}
+{{ preset_render('life_status', individual.lifeStatus) }}
+```
+
+So a preset defining no `source` can be handed the value directly:
+
+```twig
+{{ preset_render('age', age) }}
+{{ preset_render('boolean', isAlive) }}
+```
+
+while a preset defining a `source` still reads it from the array or object it is given:
+
+```twig
+{{ preset_render('birth_date', individual) }}
+```
+
+Without a template, the value is rendered as is (escaped): scalars, `Stringable` objects, and backed
+enums (through their `->value`). A preset with neither a `source` nor a `template`, given anything else
+(an array, a plain object, a pure enum), throws an `UnexpectedContentValueTypeException`: it has no way
+to turn that item into content.

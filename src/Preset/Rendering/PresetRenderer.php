@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\RenderingPreset\Preset\Rendering;
 
+use BackedEnum;
 use Jmf\RenderingPreset\Exception\HtmlEscapingException;
 use Jmf\RenderingPreset\Exception\TemplateRenderingException;
 use Jmf\RenderingPreset\Exception\UnexpectedContentValueTypeException;
@@ -26,7 +27,7 @@ readonly class PresetRenderer implements PresetRendererInterface
     #[Override]
     public function render(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): RenderedPreset {
         return new RenderedPreset(
@@ -36,8 +37,6 @@ readonly class PresetRenderer implements PresetRendererInterface
     }
 
     /**
-     * @param array<string, mixed>|object $item
-     *
      * @throws HtmlEscapingException
      * @throws TemplateRenderingException
      * @throws UnexpectedContentValueTypeException
@@ -45,12 +44,16 @@ readonly class PresetRenderer implements PresetRendererInterface
      */
     private function getContent(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         ?string $source,
     ): string {
         $valueFromSource = $this->tryGetValueFromSource($preset, $item, $source);
         $value           = $this->tryGetValueFromTemplate($preset, $item, $valueFromSource);
         $needsEscaping   = ($value === $valueFromSource);
+
+        if ($value instanceof BackedEnum) {
+            $value = $value->value;
+        }
 
         if (is_scalar($value) || ($value instanceof Stringable)) {
             $value = (string) $value;
@@ -70,26 +73,22 @@ readonly class PresetRenderer implements PresetRendererInterface
     }
 
     /**
-     * @param array<string, mixed>|object $item
-     *
      * @throws UnreadableItemValueException
      */
     private function tryGetValueFromSource(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         ?string $source,
     ): mixed {
         return $this->itemValueReader->read($preset, $item, $source);
     }
 
     /**
-     * @param array<string, mixed>|object $item
-     *
      * @throws TemplateRenderingException
      */
     private function tryGetValueFromTemplate(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         mixed $value,
     ): mixed {
         $template = $preset->getTemplate();

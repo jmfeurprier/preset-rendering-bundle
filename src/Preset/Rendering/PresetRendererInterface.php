@@ -13,8 +13,6 @@ use Jmf\RenderingPreset\Preset\Preset;
 interface PresetRendererInterface
 {
     /**
-     * @param array<string, mixed>|object $item
-     *
      * @throws HtmlEscapingException
      * @throws TemplateRenderingException
      * @throws UnexpectedContentValueTypeException
@@ -22,7 +20,7 @@ interface PresetRendererInterface
      */
     public function render(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): RenderedPreset;
 }

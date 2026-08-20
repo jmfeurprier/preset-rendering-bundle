@@ -48,45 +48,42 @@ class RenderingPresetExtension extends AbstractExtension
     }
 
     /**
-     * @param non-empty-string            $presetId
-     * @param array<string, mixed>|object $item
-     * @param null|non-empty-string       $source
+     * @param non-empty-string      $presetId
+     * @param null|non-empty-string $source
      *
      * @throws RenderingPresetException
      */
     public function render(
         string $presetId,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): string {
         return $this->doGet($presetId, $item, $source)->getContent();
     }
 
     /**
-     * @param non-empty-string            $presetId
-     * @param array<string, mixed>|object $item
-     * @param null|non-empty-string       $source
+     * @param non-empty-string      $presetId
+     * @param null|non-empty-string $source
      *
      * @throws RenderingPresetException
      */
     public function get(
         string $presetId,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): RenderedPreset {
         return $this->doGet($presetId, $item, $source);
     }
 
     /**
-     * @param non-empty-string            $presetId
-     * @param array<string, mixed>|object $item
-     * @param null|non-empty-string       $source
+     * @param non-empty-string      $presetId
+     * @param null|non-empty-string $source
      *
      * @throws RenderingPresetException
      */
     private function doGet(
         string $presetId,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): RenderedPreset {
         $preset = $this->presetRepository->get($presetId);

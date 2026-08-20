@@ -9,7 +9,7 @@ use Jmf\RenderingPreset\Preset\Preset;
 class UndefinedArrayKeyException extends UnreadableItemValueException
 {
     /**
-     * @param array<string, mixed> $array
+     * @param array<array-key, mixed> $array
      */
     public function __construct(
         Preset $preset,
@@ -52,7 +52,7 @@ class UndefinedArrayKeyException extends UnreadableItemValueException
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     public function getArray(): array
     {

@@ -1,0 +1,4 @@
+align:    'end'
+label:    'Price'
+source:   'price'
+template: 'preset/price.html.twig'

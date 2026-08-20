@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Jmf\RenderingPreset\Preset\Rendering;
 
 use Jmf\RenderingPreset\Exception\UndefinedArrayKeyException;
+use Jmf\RenderingPreset\Exception\UnexpectedItemSourceException;
 use Jmf\RenderingPreset\Exception\UnreadableItemValueException;
 use Jmf\RenderingPreset\Exception\UnreadableObjectPropertyException;
 use Jmf\RenderingPreset\Preset\Preset;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Throwable;
+use UnitEnum;
 
 readonly class ItemValueReader
 {
@@ -19,19 +21,29 @@ readonly class ItemValueReader
     }
 
     /**
-     * @param array<string, mixed>|object $item
-     *
      * @throws UnreadableItemValueException
      */
     public function read(
         Preset $preset,
-        array | object $item,
+        mixed $item,
         ?string $source = null,
     ): mixed {
+        if (!$this->isTraversable($item)) {
+            if (null === $source) {
+                return $item;
+            }
+
+            throw new UnexpectedItemSourceException(
+                preset: $preset,
+                item:   $item,
+                source: $source,
+            );
+        }
+
         $source ??= $preset->getSource();
 
         if (null === $source) {
-            return null;
+            return $item;
         }
 
         if (is_object($item)) {
@@ -42,7 +54,21 @@ readonly class ItemValueReader
     }
 
     /**
-     * @param array<string, mixed> $item
+     * Enums are values, not containers: no source can be read from them.
+     *
+     * @phpstan-assert-if-true array<array-key, mixed>|object $item
+     */
+    private function isTraversable(mixed $item): bool
+    {
+        if ($item instanceof UnitEnum) {
+            return false;
+        }
+
+        return is_array($item) || is_object($item);
+    }
+
+    /**
+     * @param array<array-key, mixed> $item
      *
      * @throws UndefinedArrayKeyException
      */

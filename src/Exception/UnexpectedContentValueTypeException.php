@@ -8,12 +8,9 @@ use Jmf\RenderingPreset\Preset\Preset;
 
 class UnexpectedContentValueTypeException extends RenderingPresetException
 {
-    /**
-     * @param array<string, mixed>|object $item
-     */
     public function __construct(
         private readonly Preset $preset,
-        private readonly array | object $item,
+        private readonly mixed $item,
         private readonly ?string $source,
         private readonly mixed $value,
     ) {
@@ -30,10 +27,7 @@ class UnexpectedContentValueTypeException extends RenderingPresetException
         return $this->preset;
     }
 
-    /**
-     * @return array<string, mixed>|object
-     */
-    public function getItem(): array | object
+    public function getItem(): mixed
     {
         return $this->item;
     }
